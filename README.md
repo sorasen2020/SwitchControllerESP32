@@ -18,6 +18,8 @@ ESP32-S3-DevkitCを使ってNintendo Switchのゲームを自動化するマイ�
     Arduino IDE（1.8.19 推奨）
     Arduino core for ESP32 (2.0.6)
 
+参考URL:https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html#installing-using-arduino-ide
+
 # 使い方
 
 ## ライブラリのインストール
