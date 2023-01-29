@@ -1,72 +1,47 @@
-/*
-Copyright (c) 2023 sorasen2020
-released under the MIT license
-https://opensource.org/licenses/mit-license.php
-*/
+#pragma one
 
-#pragma once
-#include "stdint.h"
-#include "string.h"
-#include "CustomHID.h"
-#include "CustomHIDDevice.h"
+#include "Arduino.h"
+#include "math.h"
+#include "NintendoSwitchControllESP32.h"
 
-enum Button : uint16_t
+enum class LS : uint16_t
 {
-  Y       = 0x0001,
-  B       = 0x0002,
-  A       = 0x0004,
-  X       = 0x0008,
-  L       = 0x0010,
-  R       = 0x0020,
-  ZL      = 0x0040,
-  ZR      = 0x0080,
-  MINUS   = 0x0100,
-  PLUS    = 0x0200,
-  LCLICK  = 0x0400,
-  RCLICK  = 0x0800,
-  HOME    = 0x1000,
-  CAPTURE = 0x2000
+  LS_CENTER     = 0x0000,
+  LS_UP         = 0x0001,
+  LS_UP_RIGHT   = 0x0002,
+  LS_RIGHT      = 0x0003,
+  LS_DOWN_RIGHT = 0x0004,
+  LS_DOWN       = 0x0005,
+  LS_DOWN_LEFT  = 0x0006,
+  LS_LEFT       = 0x0007,
+  LS_UP_LEFT    = 0x0008
 };
 
-enum Hat : uint8_t
+enum class RS : uint16_t
 {
-  UP         = 0x00,
-  UP_RIGHT   = 0x01,
-  RIGHT      = 0x02,
-  RIGHT_DOWN = 0x03,
-  DOWN       = 0x04,
-  DOWN_LEFT  = 0x05,
-  LEFT       = 0x06,
-  LEFT_UP    = 0x07,
-  CENTER     = 0x08
+  RS_CENTER     = 0x0000,
+  RS_UP         = 0x0001,
+  RS_UP_RIGHT   = 0x0002,
+  RS_RIGHT      = 0x0003,
+  RS_DOWN_RIGHT = 0x0004,
+  RS_DOWN       = 0x0005,
+  RS_DOWN_LEFT  = 0x0006,
+  RS_LEFT       = 0x0007,
+  RS_UP_LEFT    = 0x0008
 };
 
-typedef struct
-{
-  uint16_t Button;
-  uint8_t Hat;
-  uint8_t LX;
-  uint8_t LY;
-  uint8_t RX;
-  uint8_t RY;
-  uint8_t Dummy;
-} USB_JoystickReport_Input_t;
+static uint16_t _button_pushing_msec;
 
-class SwitchControllerESP32_
-{
-  private:
-    USB_JoystickReport_Input_t _joystickInputData;
-  public:
-    SwitchControllerESP32_(void);
-    void begin(void);
-    bool sendReport(void);
-    void pressButton(Button button_num);
-    void releaseButton(Button button_num);
-    void pressHatButton(Hat hat);
-    void releaseHatButton(void);
-    void sendReportOnly(USB_JoystickReport_Input_t t_joystickInputData);
-    void setStickTiltRatio(int16_t lx_per, int16_t ly_per,
-                           int16_t rx_per, int16_t ry_per);
-};
+void switchcontrolleresp32_init(void);
+void switchcontrolleresp32_init(uint16_t button_pushing_msec);
+void switchcontrolleresp32_reset(void);
+void pushButton(Button button, int delay_after_pushing_msec, int loop_num);
+void pushButton2(Button button, int pushing_time_msec, int delay_after_pushing_msec, int loop_num);
+void pushHatButton(Hat button, int delay_after_pushing_msec, int loop_num);
+void pushHatButtonContinuous(Hat button, int pushing_time_msec);
+void tiltJoystick(int lx_per, int ly_per, int rx_per, int ry_per, int tilt_time_msec, int delay_after_tilt_msec);
+void sendReportOnly(USB_JoystickReport_Input_t t_joystickInputData);
 
-SwitchControllerESP32_ &SwitchController();
+void UseLStick(LS Lstick, int tilt_time_msec, int delay_after_tilt_msec);
+void UseRStick(RS Rstick, int tilt_time_msec, int delay_after_tilt_msec);
+void TiltLeftStick(int direction_deg, double power, int holdtime, int delaytime);

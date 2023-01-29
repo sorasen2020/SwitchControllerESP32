@@ -1,9 +1,3 @@
-/*
-Copyright (c) 2023 sorasen2020
-released under the MIT license
-https://opensource.org/licenses/mit-license.php
-*/
-
 #include "CustomHIDDevice.h"
 
 static const uint8_t _hidReportDescriptor[] = { // 8 axis
@@ -55,13 +49,18 @@ CustomHIDDevice_::CustomHIDDevice_(void)
   static bool initialized = false;
   if(!initialized){
     initialized = true;
-    CustomHID().addDevice(this, sizeof(_hidReportDescriptor));
+    hid.addDevice(this, sizeof(_hidReportDescriptor));
   }
 }
 
 void CustomHIDDevice_::begin(void)
 {
-  CustomHID().begin();
+  hid.begin();
+}
+
+bool CustomHIDDevice_::SendReport(const void *data, int len)
+{
+  return (hid.SendReport(0, data, len));
 }
 
 uint16_t CustomHIDDevice_::_onGetDescriptor(uint8_t* buffer)

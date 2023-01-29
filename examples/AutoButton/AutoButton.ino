@@ -1,21 +1,24 @@
+/*
+Copyright (c) 2023 sorasen2020
+released under the MIT license
+https://opensource.org/licenses/mit-license.php
+*/
+
 #ifndef ARDUINO_USB_MODE
 #error This sketch should be used when USB is in OTG mode
 void setup(){}
 void loop(){}
 #else
 #include "SwitchControllerESP32.h"
+#include "Arduino.h"
 #endif /* ARDUINO_USB_MODE */
 
 void setup() {
-  Serial.begin(115200);
-  Serial.setDebugOutput(true);
-  SwitchController().begin();
+  switchcontrolleresp32_init();
+  USB.begin();
+  switchcontrolleresp32_reset();
 }
 
 void loop() {
-  Serial.println("Button Pressed");
-  SwitchController().pressButton(Button::A);
-  delay(100);
-  SwitchController().releaseButton(Button::A);
-  delay(100);
+  pushButton(Button::A, 100, 1);
 }
